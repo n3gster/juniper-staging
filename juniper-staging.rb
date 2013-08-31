@@ -15,6 +15,9 @@ load_template_file = File.open(template_file, "rb")
 router_template = load_template_file.read
 load_template_file.close
 
+# Make an array to hold errors in.  If errors are found in the config, the template will not build and the errors will be printed.
+list_errors = []
+
 # Get the mgmt prefix as an integer
 begin
 	# Count how many IP addresses I need
@@ -24,7 +27,7 @@ begin
 	mgmt_first = IPAddr.new config['mgmt_subnet']
 	mgmt_num_hosts = mgmt_first.to_range.count - 2
 	if mgmt_num_hosts < num_ip_needed
-		puts "Subnet for Management network is not large enough - #{num_ip_needed} addresses needed and #{mgmt_num_hosts} in subnet."
+		list_errors.push("ERROR:Subnet for Management network is not large enough - #{num_ip_needed} addresses needed and #{mgmt_num_hosts} in subnet.")
 	end
 	next_ip_assign_mgmt = IPAddr.new mgmt_first.to_i + 1,Socket::AF_INET
 
@@ -32,16 +35,13 @@ begin
 	loopback_first = IPAddr.new config['loopback_subnet']
 	loopback_num_hosts = loopback_first.to_range.count - 2
 	if loopback_num_hosts < num_ip_needed
-		puts "Subnet for Loopback network is not large enough - #{num_ip_needed} addresses needed and #{loopback_num_hosts} in subnet"
+		list_errors.push("Subnet for Loopback network is not large enough - #{num_ip_needed} addresses needed and #{loopback_num_hosts} in subnet")
 	end
 	next_ip_assign_loopback = IPAddr.new loopback_first.to_i + 1,Socket::AF_INET
 rescue
 	puts "ERROR: Check the mgmt_subnet and loopback_subnet options are right in #{ARGV[0]}"
 	abort
 end
-
-# Make an array to hold errors in.  If errors are found in the config, the template will not build and the errors will be printed.
-list_errors = []
 
 # Mandatory entires - you always need to build the hostname and management info, and loopbacks.  At least when using this script. :-)
 @list_tpl_routers = []
