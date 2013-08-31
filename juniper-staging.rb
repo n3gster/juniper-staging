@@ -58,6 +58,7 @@ config['routers'].each do |router_hostname, router_mgmt|
 	next_ip_assign_loopback=next_ip_assign_loopback.succ
 	next_ip_assign_mgmt=next_ip_assign_mgmt.succ
 	puts "router #{router_hostname} will get #{new_router['mgmt_ip']}"
+	@list_tpl_routers.push(new_router)
 end
 
 # Optional entries - you may want to make username blocks, igp blocks and ibgp blocks - these are setup here.
@@ -91,7 +92,11 @@ if list_errors.count > 0
 	end
 else
 	puts "Make template"
-	render = ERB.new router_template
-	puts render.result
+	@list_tpl_routers.each do |router|
+		@router = router
+		puts "doing #{@router['hostname']}"
+		render = ERB.new router_template
+		puts render.result
+	end
 end
 
