@@ -40,10 +40,6 @@ rescue
 	abort
 end
 
-temp_mgmt = next_ip_assign_mgmt.to_s
-temp_loop = next_ip_assign_loopback.to_s
-puts "First IPs will be #{temp_mgmt} and #{temp_loop}"
-
 # Make an array to hold errors in.  If errors are found in the config, the template will not build and the errors will be printed.
 list_errors = []
 
