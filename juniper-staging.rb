@@ -53,11 +53,11 @@ config['routers'].each do |router_hostname, router_mgmt|
 	new_router = {}
 	new_router['hostname'] = router_hostname
 	new_router['mgmt_port'] = router_mgmt
-	new_router['mgmt_ip']   = next_ip_assign_mgmt
-	new_router['loopback_ip'] = next_ip_assign_loopback
-	next_ip_assign_loopback = next_ip_assign_loopback+1
-	next_ip_assign_mgmt     = next_ip_assign_mgmt+1
-	puts "router #{router_hostname} will get #{new_router}"
+	new_router['mgmt_ip']   = next_ip_assign_mgmt.to_s
+	new_router['loopback_ip'] = next_ip_assign_loopback.to_s
+	next_ip_assign_loopback=next_ip_assign_loopback.succ
+	next_ip_assign_mgmt=next_ip_assign_mgmt.succ
+	puts "router #{router_hostname} will get #{new_router['mgmt_ip']}"
 end
 
 # Optional entries - you may want to make username blocks, igp blocks and ibgp blocks - these are setup here.
