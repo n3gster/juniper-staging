@@ -8,6 +8,5 @@ Dependencies
 ============
 
 Built on ruby-parseconfig, written by Derks.  https://github.com/derks/ruby-parseconfig
-
-
+sudo gem install parseconfig
 
