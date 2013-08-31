@@ -26,7 +26,7 @@ begin
 	if mgmt_num_hosts < num_ip_needed
 		puts "Subnet for Management network is not large enough - #{num_ip_needed} addresses needed and #{mgmt_num_hosts} in subnet."
 	end
-	next_ip_assign_mgmt = mgmt_first.to_i + 1
+	next_ip_assign_mgmt = IPAddr.new mgmt_first.to_i + 1,Socket::AF_INET
 
 	# Calculate loopback address details, see if subnet is large enough
 	loopback_first = IPAddr.new config['loopback_subnet']
@@ -34,15 +34,15 @@ begin
 	if loopback_num_hosts < num_ip_needed
 		puts "Subnet for Loopback network is not large enough - #{num_ip_needed} addresses needed and #{loopback_num_hosts} in subnet"
 	end
-	next_ip_assign_loopback = loopback_first.to_i + 1
+	next_ip_assign_loopback = IPAddr.new loopback_first.to_i + 1,Socket::AF_INET
 rescue
 	puts "ERROR: Check the mgmt_subnet and loopback_subnet options are right in #{ARGV[0]}"
 	abort
 end
 
-temp_mgmt = IPAddr.new next_ip_assign_mgmt,Socket::AF_INET
-temp_loop = IPAddr.new next_ip_assign_loopback,Socket::AF_INET
-puts "First IPs will be #{temp_mgmt.to_s} and #{temp_loop.to_s}"
+temp_mgmt = next_ip_assign_mgmt.to_s
+temp_loop = next_ip_assign_loopback.to_s
+puts "First IPs will be #{temp_mgmt} and #{temp_loop}"
 
 # Make an array to hold errors in.  If errors are found in the config, the template will not build and the errors will be printed.
 list_errors = []
@@ -53,7 +53,11 @@ config['routers'].each do |router_hostname, router_mgmt|
 	new_router = {}
 	new_router['hostname'] = router_hostname
 	new_router['mgmt_port'] = router_mgmt
-	# to do now - all the ip address stuff
+	new_router['mgmt_ip']   = next_ip_assign_mgmt
+	new_router['loopback_ip'] = next_ip_assign_loopback
+	next_ip_assign_loopback = next_ip_assign_loopback+1
+	next_ip_assign_mgmt     = next_ip_assign_mgmt+1
+	puts "router #{router_hostname} will get #{new_router}"
 end
 
 # Optional entries - you may want to make username blocks, igp blocks and ibgp blocks - these are setup here.
