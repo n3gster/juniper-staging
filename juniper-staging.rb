@@ -39,7 +39,7 @@ begin
 	end
 	next_ip_assign_loopback = IPAddr.new loopback_first.to_i + 1,Socket::AF_INET
 rescue
-	puts "ERROR: Check the mgmt_subnet and loopback_subnet options are right in #{ARGV[0]}"
+	puts "ERROR: Check the mgmt_subnet and loopback_subnet options are right in #{ARGV[0]}, because I failed to parse them as a valid IPv4 subnet"
 	abort
 end
 
