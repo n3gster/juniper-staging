@@ -2,6 +2,7 @@
 
 require 'parseconfig'
 require 'erb'
+require 'IPAddr'
 
 config = ParseConfig.new(ARGV[0])
 template_file = config['template_file']
@@ -9,13 +10,53 @@ unless File.file?(template_file)
 	puts "ERROR: Check the template_file configuration variable is correct (points to a valid template's filename) in #{ARGV[0]}"
 	abort
 end
+
 load_template_file = File.open(template_file, "rb")
 router_template = load_template_file.read
 load_template_file.close
 
+# Get the mgmt prefix as an integer
+begin
+	# Count how many IP addresses I need
+	num_ip_needed = config['routers'].count
+
+	# Calculate management address details, see if subnet is large enough
+	mgmt_first = IPAddr.new config['mgmt_subnet']
+	mgmt_num_hosts = mgmt_first.to_range.count - 2
+	if mgmt_num_hosts < num_ip_needed
+		puts "Subnet for Management network is not large enough - #{num_ip_needed} addresses needed and #{mgmt_num_hosts} in subnet."
+	end
+	next_ip_assign_mgmt = mgmt_first.to_i + 1
+
+	# Calculate loopback address details, see if subnet is large enough
+	loopback_first = IPAddr.new config['loopback_subnet']
+	loopback_num_hosts = loopback_first.to_range.count - 2
+	if loopback_num_hosts < num_ip_needed
+		puts "Subnet for Loopback network is not large enough - #{num_ip_needed} addresses needed and #{loopback_num_hosts} in subnet"
+	end
+	next_ip_assign_loopback = loopback_first.to_i + 1
+rescue
+	puts "ERROR: Check the mgmt_subnet and loopback_subnet options are right in #{ARGV[0]}"
+	abort
+end
+
+temp_mgmt = IPAddr.new next_ip_assign_mgmt,Socket::AF_INET
+temp_loop = IPAddr.new next_ip_assign_loopback,Socket::AF_INET
+puts "First IPs will be #{temp_mgmt.to_s} and #{temp_loop.to_s}"
+
 # Make an array to hold errors in.  If errors are found in the config, the template will not build and the errors will be printed.
 list_errors = []
 
+# Mandatory entires - you always need to build the hostname and management info, and loopbacks.  At least when using this script. :-)
+@list_tpl_routers = []
+config['routers'].each do |router_hostname, router_mgmt|
+	new_router = {}
+	new_router['hostname'] = router_hostname
+	new_router['mgmt_port'] = router_mgmt
+	# to do now - all the ip address stuff
+end
+
+# Optional entries - you may want to make username blocks, igp blocks and ibgp blocks - these are setup here.
 job_list = config['make'].split
 job_list.each do |job|
 	case job
