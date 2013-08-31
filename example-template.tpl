@@ -4,7 +4,7 @@ system {
 	user <%= user['user_name'] %> {
 		class <%= user['user_class'] %>;
 		authentication {
-			password <% user['password'] %>
+			password "<%= user['password'] %>";
 		}
 	}
 	<% end %>
