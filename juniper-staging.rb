@@ -1,6 +1,7 @@
 #! /usr/bin/ruby
 
 require 'parseconfig'
+require 'erb'
 
 config = ParseConfig.new(ARGV[0])
 template_file = config['template_file']
@@ -8,6 +9,9 @@ unless File.file?(template_file)
 	puts "ERROR: Check the template_file configuration variable is correct (points to a valid template's filename) in #{ARGV[0]}"
 	abort
 end
+load_template_file = File.open(template_file, "rb")
+router_template = load_template_file.read
+load_template_file.close
 
 # Make an array to hold errors in.  If errors are found in the config, the template will not build and the errors will be printed.
 list_errors = []
@@ -42,5 +46,7 @@ if list_errors.count > 0
 	end
 else
 	puts "Make template"
+	render = ERB.new router_template
+	puts render.result
 end
 
