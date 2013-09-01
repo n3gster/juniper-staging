@@ -58,7 +58,8 @@ config['routers'].each do |router_hostname, router_mgmt|
 end
 
 # Optional entries - you may want to make username blocks, igp blocks and ibgp blocks - these are setup here.
-job_list = config['make'].split
+job_list = config['make'].split(",")
+puts "Jobs: #{job_list}"
 job_list.each do |job|
 	case job
 		when "users"
@@ -74,9 +75,15 @@ job_list.each do |job|
 				new_user['password']   = ('a'..'z').to_a.shuffle[0,8].join
 				@list_tpl_users.push(new_user)
 			end
-		@list_tpl_users.each do |new_user|
-		puts "User - #{new_user['user_name']} is allowed #{new_user['user_class']} privs with password #{new_user['password']}."
-		end
+
+		when "isis"
+			# spoof an iso address by wanging a count in
+			counter = 1
+			@list_tpl_routers.each do |router|
+				# FIXME, pad counter to four digits
+				router['iso_addr'] = "49.0001.0101.0000.#{counter}.00"
+				counter=counter+1
+			end
 	end
 end
 
@@ -90,9 +97,10 @@ else
 	puts "Make template"
 	@list_tpl_routers.each do |router|
 		@router = router
-		puts "doing #{@router['hostname']}"
+		puts "doing #{@router['hostname']} (#{router['iso_addr']})"
 		render = ERB.new router_template
 		puts render.result
 	end
 end
 
+puts @list_tpl_routers
