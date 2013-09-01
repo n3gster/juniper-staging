@@ -77,6 +77,7 @@ job_list.each do |job|
 			end
 
 		when "isis"
+			@flag_tpl_isis = 'yes'
 			# spoof an iso address by wanging a count in
 			counter = 1
 			@list_tpl_routers.each do |router|

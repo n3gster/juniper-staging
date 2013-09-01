@@ -9,3 +9,18 @@ system {
 	}
 	<% end %><% end %>
 }
+
+interfaces {
+lo0 {
+        unit 0 {
+            family inet {
+                address <%= @router['loopback_ip'] %>;
+            }
+            <% if @flag_tpl_isis=='yes' %>
+            family iso {
+                address <%= @router['iso_addr'] %>;
+            }
+            <% end %>
+        }
+    }
+}
