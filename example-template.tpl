@@ -8,6 +8,28 @@ system {
 		}
 	}
 	<% end %><% end %>
+
+	services {
+		ssh;
+		netconf {
+			ssh;
+		}
+	}
+
+	syslog {
+		user * {
+			any emergency;
+		}
+		host <%= @router['syslog_host'] %> {
+			any any;
+			authorization info;
+			interactive-commands info;
+		}
+	}
+	file messages {
+		any notice;
+		authorization info;
+	}
 }
 
 interfaces {
