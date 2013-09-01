@@ -54,3 +54,20 @@ interfaces {
         }
     }
 }
+
+protocols {
+	<% if @flag_tpl_mpls == 'yes' %>
+	rsvp {
+        apply-groups RSVP-PARAMETERS;
+    }
+    mpls {
+        apply-groups MPLS-PARAMETERS;
+        <% for destrouter in @list_tpl_routers %><% next if destrouter['hostname'] == @router['hostname'] %>
+        label-switched-path TO-<%= destrouter['hostname'] %> {
+        	to <%= destrouter['loopback_ip'] %>;
+        	no-cspf;
+        }
+        <% end %> 
+    }
+	<% end %>
+}

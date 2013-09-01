@@ -88,6 +88,9 @@ job_list.each do |job|
 				router['iso_addr'] = "49.0001.0101.0000.#{counter}.00"
 				counter=counter+1
 			end
+
+		when "mpls"
+			@flag_tpl_mpls = 'yes'
 	end
 end
 
