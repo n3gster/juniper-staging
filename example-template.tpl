@@ -36,7 +36,7 @@ interfaces {
 	lo0 {
         unit 0 {
             family inet {
-                address <%= @router['loopback_ip'] %>;
+                address <%= @router['loopback_ip'] %>/32;
             }
             <% if @flag_tpl_isis=='yes' %>
             family iso {
