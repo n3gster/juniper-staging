@@ -36,6 +36,10 @@ system {
 	}
 }
 
+routing-options {
+	autonomous-system <%= @router['my_asn'] %>;
+}
+
 interfaces {
 	lo0 {
         unit 0 {
