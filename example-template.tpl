@@ -70,4 +70,27 @@ protocols {
         <% end %> 
     }
 	<% end %>
+	<% if @flag_tpl_ibgp == 'yes' %>
+	bgp {
+        traceoptions {
+            file bgp.log size 10m files 10;
+            flag open detail;
+        }
+        group IBGP {
+            type internal;
+            local-address <%= @router['loopback_ip'] %>;
+            family inet {
+                any;
+            }
+            family inet-vpn {
+                any;
+            }
+            family l2vpn {
+                signaling;
+            }
+            <% for destrouter in @list_tpl_routers %><% next if destrouter['hostname'] == @router['hostname'] %>
+            neighbor <%= destrouter['loopback_ip'] %>;<% end %>
+        }
+    }
+	<% end %>
 }

@@ -91,6 +91,9 @@ job_list.each do |job|
 
 		when "mpls"
 			@flag_tpl_mpls = 'yes'
+
+		when "ibgp"
+			@flag_tpl_ibgp = 'yes'
 	end
 end
 
