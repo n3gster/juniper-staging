@@ -85,7 +85,7 @@ job_list.each do |job|
 			counter = 1
 			@list_tpl_routers.each do |router|
 				# FIXME, pad counter to four digits
-				router['iso_addr'] = "49.0001.0101.0000.#{counter}.00"
+				router['iso_addr'] = "49.0001.0101.0000.#{sprintf '%04i', counter}.00"
 				counter=counter+1
 			end
 
