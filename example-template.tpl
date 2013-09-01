@@ -25,10 +25,14 @@ system {
 			authorization info;
 			interactive-commands info;
 		}
+	
+		file messages {
+			any notice;
+			authorization info;
+		}
 	}
-	file messages {
-		any notice;
-		authorization info;
+	ntp {
+		server <%= @router['ntp_host'] %>;
 	}
 }
 
