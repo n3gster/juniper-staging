@@ -41,6 +41,14 @@ routing-options {
 }
 
 interfaces {
+    fxp0 {
+        unit 0 {
+                family inet {
+                        address <%= @router['mgmt_ip'] %>/24;
+                }
+        }
+    }
+
 	lo0 {
         unit 0 {
             family inet {
