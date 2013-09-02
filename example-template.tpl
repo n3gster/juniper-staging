@@ -41,10 +41,10 @@ routing-options {
 }
 
 interfaces {
-    fxp0 {
+    <%= @router['mgmt_port'] %> {
         unit 0 {
                 family inet {
-                        address <%= @router['mgmt_ip'] %>/24;
+                        address <%= @router['mgmt_ip'] %>/<%= @router['subnet_size'] %>;
                 }
         }
     }
