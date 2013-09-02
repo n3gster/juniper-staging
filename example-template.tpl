@@ -49,7 +49,7 @@ interfaces {
         }
     }
 
-	lo0 {
+    lo0 {
         unit 0 {
             family inet {
                 address <%= @router['loopback_ip'] %>/32;
