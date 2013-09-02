@@ -41,7 +41,15 @@ routing-options {
 }
 
 interfaces {
-	lo0 {
+    fxp0 {
+        unit 0 {
+                family inet {
+                        address <%= @router['mgmt_ip'] %>/24;
+                }
+        }
+    }
+
+    lo0 {
         unit 0 {
             family inet {
                 address <%= @router['loopback_ip'] %>/32;
