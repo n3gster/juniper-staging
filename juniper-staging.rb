@@ -15,6 +15,9 @@ load_template_file = File.open(template_file, "rb")
 router_template = load_template_file.read
 load_template_file.close
 
+output_directory = config['outputdir']
+Dir.mkdir(output_directory) unless File.exists?(output_directory)
+
 # Make an array to hold errors in.  If errors are found in the config, the template will not build and the errors will be printed.
 list_errors = []
 
@@ -107,10 +110,13 @@ else
 	puts "Make template"
 	@list_tpl_routers.each do |router|
 		@router = router
+		output_file = "#{output_directory}/#{@router['hostname']}"
+		puts output_file
+		f = File.open(output_file, 'w')
 		puts "doing #{@router['hostname']} (#{router['iso_addr']})"
 		render = ERB.new router_template
-		puts render.result
+		f.puts render.result
+		f.close
 	end
 end
 
-puts @list_tpl_routers
