@@ -2,7 +2,7 @@
 
 require 'parseconfig'
 require 'erb'
-require 'IPAddr'
+require 'ipaddr'
 
 config = ParseConfig.new(ARGV[0])
 template_file = config['template_file']
